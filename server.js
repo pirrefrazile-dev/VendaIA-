@@ -51,7 +51,7 @@ app.post("/api/produtos", async (req, res) => {
       .insert({
         nome: nome.trim(),
         preco: Number(preco),
-        marketplace: marketplace || "Não informado"
+        link_afiliado: link_afiliado || null
       })
       .select()
       .single();
