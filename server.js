@@ -91,8 +91,76 @@ app.get("/api/produtos", async (req, res) => {
     });
   }
 });
+
 app.get("/importar", (req, res) => {
   res.send(`
+  <!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VendaIA</title>
+    <style>
+      body {font-family:Arial;background:#101827;color:white;padding:20px}
+      .box {max-width:450px;margin:auto;background:#1e293b;padding:22px;border-radius:15px}
+      h1 {color:#22c55e;text-align:center}
+      input,button {width:100%;padding:14px;margin:9px 0;box-sizing:border-box;border-radius:8px;border:0}
+      button {background:#16a34a;color:white;font-weight:bold}
+      .resultado {background:#334155;padding:12px;margin-top:12px;border-radius:8px}
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>VendaIA</h1>
+      <h3>Central de Automação</h3>
+      <p>Cole o link do produto:</p>
+      <input id="link" placeholder="Link da Shopee" />
+      <button onclick="gerar()">GERAR MEU ANÚNCIO</button>
+      <div id="resultado"></div>
+    </div>
+    <script>
+      async function gerar() {
+        const link = document.getElementById("link").value.trim();
+        const resultado = document.getElementById("resultado");
+        if (!link) {
+          resultado.textContent = "Cole o link primeiro.";
+          return;
+        }
+        resultado.textContent = "Preparando anúncio...";
+        try {
+          const resposta = await fetch("/api/gerar-anuncio", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({link})
+          });
+          const dados = await resposta.json();
+          if (!resposta.ok) throw new Error(dados.error || "Erro");
+          resultado.replaceChildren();
+          [
+            ["TÍTULO", dados.titulo],
+            ["DESCRIÇÃO", dados.descricao],
+            ["HASHTAGS", dados.hashtags.join(" ")],
+            ["VÍDEO", dados.video],
+            ["ANÚNCIO", dados.anuncio]
+          ].forEach(([nome, valor]) => {
+            const bloco = document.createElement("div");
+            bloco.className = "resultado";
+            const titulo = document.createElement("strong");
+            titulo.textContent = nome;
+            const texto = document.createElement("p");
+            texto.textContent = valor;
+            bloco.append(titulo, texto);
+            resultado.append(bloco);
+          });
+        } catch (erro) {
+          resultado.textContent = erro.message;
+        }
+      }
+    </script>
+  </body>
+  </html>
+  `);
+});  res.send(`
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
