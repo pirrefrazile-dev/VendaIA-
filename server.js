@@ -5,10 +5,10 @@ const { createClient } = require("@supabase/supabase-js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-
-if (!process.env.SUPABASE_URL ||
-    !process.env.SUPABASE_SECRET_KEY
+if (
+  !process.env.SUPABASE_URL ||
+  !process.env.SUPABASE_SECRET_KEY
+) {
   throw new Error("Credenciais do Supabase não configuradas.");
 }
 
