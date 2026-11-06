@@ -32,7 +32,7 @@ app.get("/health", (req, res) => {
 // Cadastrar produto
 app.post("/api/produtos", async (req, res) => {
   try {
-    const { nome, preco, marketplace } = req.body;
+    const { nome, preco, marketplace, link_afiliado } = req.body;
 
     if (
       typeof nome !== "string" ||
