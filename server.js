@@ -150,6 +150,68 @@ app.get("/importar", (req, res) => {
     </body>
     </html>
   `);
+});app.post("/api/gerar-anuncio", async (req, res) => {
+  try {
+    const { link } = req.body;
+
+    if (!link) {
+      return res.status(400).json({
+        error: "Cole o link do produto."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      produto: link,
+      titulo: "Oferta especial: confira este produto!",
+      descricao: "Aproveite esta oportunidade e confira o produto.",
+      hashtags: [
+        "#Shopee",
+        "#Ofertas",
+        "#Achadinhos",
+        "#Promocao",
+        "#ComprasOnline"
+      ],
+      video: "Roteiro de vídeo promocional disponível para criação.",
+      anuncio: "Confira esta oferta e aproveite!"
+    });
+
+  } catch (erro) {
+    res.status(500).json({
+      error: "Erro ao gerar anúncio."
+    });
+  }
+});app.post("/api/gerar-anuncio", async (req, res) => {
+  try {
+    const { link } = req.body;
+
+    if (!link) {
+      return res.status(400).json({
+        error: "Cole o link do produto."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      produto: link,
+      titulo: "Oferta especial: confira este produto!",
+      descricao: "Aproveite esta oportunidade e confira o produto.",
+      hashtags: [
+        "#Shopee",
+        "#Ofertas",
+        "#Achadinhos",
+        "#Promocao",
+        "#ComprasOnline"
+      ],
+      video: "Roteiro de vídeo promocional disponível para criação.",
+      anuncio: "Confira esta oferta e aproveite!"
+    });
+
+  } catch (erro) {
+    res.status(500).json({
+      error: "Erro ao gerar anúncio."
+    });
+  }
 });
 app.listen(PORT, () => {
   console.log(`VendaIA funcionando na porta ${PORT}`);
