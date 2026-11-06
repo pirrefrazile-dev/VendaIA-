@@ -91,7 +91,66 @@ app.get("/api/produtos", async (req, res) => {
     });
   }
 });
-
+app.get("/importar", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>VendaIA - Importar Produto</title>
+      <style>
+        body { font-family: Arial; background: #f2f4f7; padding: 20px; }
+        .box { max-width: 450px; margin: auto; background: white;
+          padding: 20px; border-radius: 12px; }
+        input, button { width: 100%; padding: 13px; margin: 8px 0;
+          box-sizing: border-box; }
+        button { background: #16a34a; color: white; border: 0;
+          border-radius: 8px; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <div class="box">
+        <h2>VendaIA</h2>
+        <h3>Importar produto Shopee</h3>
+        <form id="form">
+          <input id="link" placeholder="Link de afiliado Shopee" required>
+          <input id="nome" placeholder="Nome do produto" required>
+          <input id="preco" type="number" step="0.01"
+            placeholder="Preço (R$)" required>
+          <button type="submit">Cadastrar produto</button>
+        </form>
+        <p id="mensagem"></p>
+      </div>
+      <script>
+        document.getElementById("form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const mensagem = document.getElementById("mensagem");
+          mensagem.textContent = "Salvando...";
+          try {
+            const resposta = await fetch("/api/produtos", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                nome: document.getElementById("nome").value,
+                preco: document.getElementById("preco").value,
+                marketplace: "Shopee",
+                link_afiliado: document.getElementById("link").value
+              })
+            });
+            const dados = await resposta.json();
+            mensagem.textContent = resposta.ok
+              ? "Produto cadastrado com sucesso!"
+              : "Erro: " + (dados.error || "Não foi possível cadastrar.");
+          } catch (erro) {
+            mensagem.textContent = "Erro de conexão. Tente novamente.";
+          }
+        });
+      </script>
+    </body>
+    </html>
+  `);
+});
 app.listen(PORT, () => {
   console.log(`VendaIA funcionando na porta ${PORT}`);
 });
